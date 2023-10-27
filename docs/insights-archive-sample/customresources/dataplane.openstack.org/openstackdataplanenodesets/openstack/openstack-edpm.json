@@ -1,0 +1,247 @@
+{
+  "apiVersion": "dataplane.openstack.org/v1beta1",
+  "kind": "OpenStackDataPlaneNodeSet",
+  "metadata": {
+    "annotations": {
+      "kubectl.kubernetes.io/last-applied-configuration": "{\"apiVersion\":\"dataplane.openstack.org/v1beta1\",\"kind\":\"OpenStackDataPlaneNodeSet\",\"metadata\":{\"annotations\":{},\"name\":\"openstack-edpm\",\"namespace\":\"openstack\"},\"spec\":{\"env\":[{\"name\":\"ANSIBLE_CALLBACKS_ENABLED\",\"value\":\"profile_tasks\"},{\"name\":\"ANSIBLE_FORCE_COLOR\",\"value\":\"True\"},{\"name\":\"ANSIBLE_ENABLE_TASK_DEBUGGER\",\"value\":\"True\"}],\"networkAttachments\":[\"ctlplane\"],\"nodeTemplate\":{\"ansible\":{\"ansiblePort\":22,\"ansibleUser\":\"cloud-admin\",\"ansibleVars\":{\"ctlplane_dns_nameservers\":[\"192.168.122.1\"],\"ctlplane_gateway_ip\":\"192.168.122.1\",\"ctlplane_host_routes\":[{\"ip_netmask\":\"0.0.0.0/0\",\"next_hop\":\"192.168.122.1\"}],\"ctlplane_mtu\":1500,\"ctlplane_subnet_cidr\":24,\"dns_search_domains\":[],\"edpm_chrony_ntp_servers\":[\"clock.corp.redhat.com\"],\"edpm_iscsid_image\":\"{{ registry_url }}/{{ image_prefix }}-iscsid:{{ image_tag }}\",\"edpm_logrotate_crond_image\":\"{{ registry_url }}/{{ image_prefix }}-cron:{{ image_tag }}\",\"edpm_network_config_hide_sensitive_logs\":false,\"edpm_network_config_template\":\"---\\n{% set mtu_list = [ctlplane_mtu] %}\\n{% for network in role_networks %}\\n{{ mtu_list.append(lookup('vars', networks_lower[network] ~ '_mtu')) }}\\n{%- endfor %}\\n{% set min_viable_mtu = mtu_list | max %}\\nnetwork_config:\\n- type: ovs_bridge\\n  name: {{ neutron_physical_bridge_name }}\\n  mtu: {{ min_viable_mtu }}\\n  use_dhcp: false\\n  dns_servers: {{ ctlplane_dns_nameservers }}\\n  domain: {{ dns_search_domains }}\\n  addresses:\\n  - ip_netmask: {{ ctlplane_ip }}/{{ ctlplane_subnet_cidr }}\\n  routes: {{ ctlplane_host_routes }}\\n  members:\\n  - type: interface\\n    name: nic1\\n    mtu: {{ min_viable_mtu }}\\n    # force the MAC address of the bridge to this interface\\n    primary: true\\n{% for network in role_networks %}\\n  - type: vlan\\n    mtu: {{ lookup('vars', networks_lower[network] ~ '_mtu') }}\\n    vlan_id: {{ lookup('vars', networks_lower[network] ~ '_vlan_id') }}\\n    addresses:\\n    - ip_netmask:\\n        {{ lookup('vars', networks_lower[network] ~ '_ip') }}/{{ lookup('vars', networks_lower[network] ~ '_cidr') }}\\n    routes: {{ lookup('vars', networks_lower[network] ~ '_host_routes') }}\\n{% endfor %}\\n\",\"edpm_neutron_metadata_agent_image\":\"{{ registry_url }}/{{ image_prefix }}-neutron-metadata-agent-ovn:{{ image_tag }}\",\"edpm_nodes_validation_validate_controllers_icmp\":false,\"edpm_nodes_validation_validate_gateway_icmp\":false,\"edpm_nova_compute_container_image\":\"{{ registry_url }}/{{ image_prefix }}-nova-compute:{{ image_tag }}\",\"edpm_nova_libvirt_container_image\":\"{{ registry_url }}/{{ image_prefix }}-nova-libvirt:{{ image_tag }}\",\"edpm_ovn_controller_agent_image\":\"{{ registry_url }}/{{ image_prefix }}-ovn-controller:{{ image_tag }}\",\"edpm_selinux_mode\":\"enforcing\",\"edpm_sshd_allowed_ranges\":[\"192.168.122.0/24\"],\"edpm_sshd_configure_firewall\":true,\"enable_debug\":false,\"external_cidr\":\"24\",\"external_host_routes\":[],\"external_mtu\":1500,\"external_vlan_id\":44,\"gather_facts\":false,\"image_prefix\":\"openstack\",\"image_tag\":\"7875d401b14a7e53d94789026df40798\",\"internal_api_cidr\":\"24\",\"internal_api_host_routes\":[],\"internal_api_mtu\":1500,\"internal_api_vlan_id\":20,\"networks_lower\":{\"External\":\"external\",\"InternalApi\":\"internal_api\",\"Storage\":\"storage\",\"Tenant\":\"tenant\"},\"neutron_physical_bridge_name\":\"br-ex\",\"neutron_public_interface_name\":\"eth0\",\"registry_url\":\"quay.io/podified-antelope-centos9\",\"role_networks\":[\"InternalApi\",\"Storage\",\"Tenant\"],\"service_net_map\":{\"nova_api_network\":\"internal_api\",\"nova_libvirt_network\":\"internal_api\"},\"storage_cidr\":\"24\",\"storage_host_routes\":[],\"storage_mtu\":1500,\"storage_vlan_id\":21,\"tenant_cidr\":\"24\",\"tenant_host_routes\":[],\"tenant_mtu\":1500,\"tenant_vlan_id\":22}},\"ansibleSSHPrivateKeySecret\":\"dataplane-ansible-ssh-private-key-secret\",\"extraMounts\":[{\"extraVolType\":\"Logs\",\"mounts\":[{\"mountPath\":\"/runner/artifacts\",\"name\":\"ansible-logs\"}],\"volumes\":[{\"name\":\"ansible-logs\",\"persistentVolumeClaim\":{\"claimName\":\"ansible-ee-logs\"}}]}],\"managementNetwork\":\"ctlplane\"},\"nodes\":{\"edpm-compute-0\":{\"ansible\":{\"ansibleHost\":\"192.168.122.100\"},\"hostName\":\"edpm-compute-0\",\"networks\":[{\"defaultRoute\":true,\"fixedIP\":\"192.168.122.100\",\"name\":\"CtlPlane\",\"subnetName\":\"subnet1\"},{\"name\":\"InternalApi\",\"subnetName\":\"subnet1\"},{\"name\":\"Storage\",\"subnetName\":\"subnet1\"},{\"name\":\"Tenant\",\"subnetName\":\"subnet1\"}]}},\"preProvisioned\":true,\"services\":[\"repo-setup\",\"bootstrap\",\"download-cache\",\"configure-network\",\"validate-network\",\"install-os\",\"configure-os\",\"run-os\",\"ovn\",\"neutron-metadata\",\"libvirt\",\"nova\",\"telemetry\"]}}\n"
+    },
+    "creationTimestamp": "2023-10-27T10:01:51Z",
+    "generation": 1,
+    "name": "openstack-edpm",
+    "namespace": "openstack",
+    "resourceVersion": "72060",
+    "uid": "81256b8f-1deb-4090-9e93-a3cc6116cf70"
+  },
+  "spec": {
+    "baremetalSetTemplate": {
+      "automatedCleaningMode": "metadata",
+      "bmhNamespace": "openshift-machine-api",
+      "cloudUserName": "",
+      "ctlplaneInterface": "",
+      "ctlplaneNetmask": "255.255.255.0",
+      "deploymentSSHSecret": "dataplane-ansible-ssh-private-key-secret",
+      "hardwareReqs": {
+        "cpuReqs": {
+          "countReq": {},
+          "mhzReq": {}
+        },
+        "diskReqs": {
+          "gbReq": {},
+          "ssdReq": {}
+        },
+        "memReqs": {
+          "gbReq": {}
+        }
+      }
+    },
+    "env": [
+      {
+        "name": "ANSIBLE_CALLBACKS_ENABLED",
+        "value": "profile_tasks"
+      },
+      {
+        "name": "ANSIBLE_FORCE_COLOR",
+        "value": "True"
+      },
+      {
+        "name": "ANSIBLE_ENABLE_TASK_DEBUGGER",
+        "value": "True"
+      }
+    ],
+    "networkAttachments": [
+      "ctlplane"
+    ],
+    "nodeTemplate": {
+      "ansible": {
+        "ansiblePort": 22,
+        "ansibleUser": "cloud-admin",
+        "ansibleVars": {
+          "ctlplane_dns_nameservers": [
+            "192.168.122.1"
+          ],
+          "ctlplane_gateway_ip": "192.168.122.1",
+          "ctlplane_host_routes": [
+            {
+              "ip_netmask": "0.0.0.0/0",
+              "next_hop": "192.168.122.1"
+            }
+          ],
+          "ctlplane_mtu": 1500,
+          "ctlplane_subnet_cidr": 24,
+          "dns_search_domains": [],
+          "edpm_chrony_ntp_servers": [
+            "clock.corp.redhat.com"
+          ],
+          "edpm_iscsid_image": "{{ registry_url }}/{{ image_prefix }}-iscsid:{{ image_tag }}",
+          "edpm_logrotate_crond_image": "{{ registry_url }}/{{ image_prefix }}-cron:{{ image_tag }}",
+          "edpm_network_config_hide_sensitive_logs": false,
+          "edpm_network_config_template": "---\n{% set mtu_list = [ctlplane_mtu] %}\n{% for network in role_networks %}\n{{ mtu_list.append(lookup('vars', networks_lower[network] ~ '_mtu')) }}\n{%- endfor %}\n{% set min_viable_mtu = mtu_list | max %}\nnetwork_config:\n- type: ovs_bridge\n  name: {{ neutron_physical_bridge_name }}\n  mtu: {{ min_viable_mtu }}\n  use_dhcp: false\n  dns_servers: {{ ctlplane_dns_nameservers }}\n  domain: {{ dns_search_domains }}\n  addresses:\n  - ip_netmask: {{ ctlplane_ip }}/{{ ctlplane_subnet_cidr }}\n  routes: {{ ctlplane_host_routes }}\n  members:\n  - type: interface\n    name: nic1\n    mtu: {{ min_viable_mtu }}\n    # force the MAC address of the bridge to this interface\n    primary: true\n{% for network in role_networks %}\n  - type: vlan\n    mtu: {{ lookup('vars', networks_lower[network] ~ '_mtu') }}\n    vlan_id: {{ lookup('vars', networks_lower[network] ~ '_vlan_id') }}\n    addresses:\n    - ip_netmask:\n        {{ lookup('vars', networks_lower[network] ~ '_ip') }}/{{ lookup('vars', networks_lower[network] ~ '_cidr') }}\n    routes: {{ lookup('vars', networks_lower[network] ~ '_host_routes') }}\n{% endfor %}\n",
+          "edpm_neutron_metadata_agent_image": "{{ registry_url }}/{{ image_prefix }}-neutron-metadata-agent-ovn:{{ image_tag }}",
+          "edpm_nodes_validation_validate_controllers_icmp": false,
+          "edpm_nodes_validation_validate_gateway_icmp": false,
+          "edpm_nova_compute_container_image": "{{ registry_url }}/{{ image_prefix }}-nova-compute:{{ image_tag }}",
+          "edpm_nova_libvirt_container_image": "{{ registry_url }}/{{ image_prefix }}-nova-libvirt:{{ image_tag }}",
+          "edpm_ovn_controller_agent_image": "{{ registry_url }}/{{ image_prefix }}-ovn-controller:{{ image_tag }}",
+          "edpm_selinux_mode": "enforcing",
+          "edpm_sshd_allowed_ranges": [
+            "192.168.122.0/24"
+          ],
+          "edpm_sshd_configure_firewall": true,
+          "enable_debug": false,
+          "external_cidr": "24",
+          "external_host_routes": [],
+          "external_mtu": 1500,
+          "external_vlan_id": 44,
+          "gather_facts": false,
+          "image_prefix": "openstack",
+          "image_tag": "7875d401b14a7e53d94789026df40798",
+          "internal_api_cidr": "24",
+          "internal_api_host_routes": [],
+          "internal_api_mtu": 1500,
+          "internal_api_vlan_id": 20,
+          "networks_lower": {
+            "External": "external",
+            "InternalApi": "internal_api",
+            "Storage": "storage",
+            "Tenant": "tenant"
+          },
+          "neutron_physical_bridge_name": "br-ex",
+          "neutron_public_interface_name": "eth0",
+          "registry_url": "quay.io/podified-antelope-centos9",
+          "role_networks": [
+            "InternalApi",
+            "Storage",
+            "Tenant"
+          ],
+          "service_net_map": {
+            "nova_api_network": "internal_api",
+            "nova_libvirt_network": "internal_api"
+          },
+          "storage_cidr": "24",
+          "storage_host_routes": [],
+          "storage_mtu": 1500,
+          "storage_vlan_id": 21,
+          "tenant_cidr": "24",
+          "tenant_host_routes": [],
+          "tenant_mtu": 1500,
+          "tenant_vlan_id": 22
+        }
+      },
+      "ansibleSSHPrivateKeySecret": "dataplane-ansible-ssh-private-key-secret",
+      "extraMounts": [
+        {
+          "extraVolType": "Logs",
+          "mounts": [
+            {
+              "mountPath": "/runner/artifacts",
+              "name": "ansible-logs"
+            }
+          ],
+          "volumes": [
+            {
+              "name": "ansible-logs",
+              "persistentVolumeClaim": {
+                "claimName": "ansible-ee-logs"
+              }
+            }
+          ]
+        }
+      ],
+      "managementNetwork": "ctlplane"
+    },
+    "nodes": {
+      "edpm-compute-0": {
+        "ansible": {
+          "ansibleHost": "192.168.122.100"
+        },
+        "hostName": "edpm-compute-0",
+        "networks": [
+          {
+            "defaultRoute": true,
+            "fixedIP": "192.168.122.100",
+            "name": "CtlPlane",
+            "subnetName": "subnet1"
+          },
+          {
+            "name": "InternalApi",
+            "subnetName": "subnet1"
+          },
+          {
+            "name": "Storage",
+            "subnetName": "subnet1"
+          },
+          {
+            "name": "Tenant",
+            "subnetName": "subnet1"
+          }
+        ]
+      }
+    },
+    "preProvisioned": true,
+    "services": [
+      "repo-setup",
+      "bootstrap",
+      "download-cache",
+      "configure-network",
+      "validate-network",
+      "install-os",
+      "configure-os",
+      "run-os",
+      "ovn",
+      "neutron-metadata",
+      "libvirt",
+      "nova",
+      "telemetry"
+    ]
+  },
+  "status": {
+    "CtlplaneSearchDomain": "ctlplane.example.com",
+    "DNSClusterAddresses": [
+      "10.217.4.154"
+    ],
+    "conditions": [
+      {
+        "lastTransitionTime": "2023-10-27T10:19:22Z",
+        "message": "NodeSet Ready",
+        "reason": "Ready",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastTransitionTime": "2023-10-27T10:19:22Z",
+        "message": "Deployment completed",
+        "reason": "Ready",
+        "status": "True",
+        "type": "DeploymentReady"
+      },
+      {
+        "lastTransitionTime": "2023-10-27T10:01:52Z",
+        "message": "Input data complete",
+        "reason": "Ready",
+        "status": "True",
+        "type": "InputReady"
+      },
+      {
+        "lastTransitionTime": "2023-10-27T10:01:52Z",
+        "message": "NodeSetDNSDataReady ready",
+        "reason": "Ready",
+        "status": "True",
+        "type": "NodeSetDNSDataReady"
+      },
+      {
+        "lastTransitionTime": "2023-10-27T10:01:52Z",
+        "message": "NodeSetIPReservationReady ready",
+        "reason": "Ready",
+        "status": "True",
+        "type": "NodeSetIPReservationReady"
+      },
+      {
+        "lastTransitionTime": "2023-10-27T10:01:52Z",
+        "message": "Setup complete",
+        "reason": "Ready",
+        "status": "True",
+        "type": "SetupReady"
+      }
+    ]
+  }
+}

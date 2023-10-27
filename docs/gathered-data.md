@@ -1511,6 +1511,54 @@ Collects logs from pods in `openshift-sdn` namespace with following substrings:
 None
 
 
+## OpenstackControlplanes
+
+Collects `openstackcontrolplanes.core.openstack.org`
+resources from all namespaces
+
+### API Reference
+None
+
+### Sample data
+- [docs/insights-archive-sample/customresources/core.openstack.org/openstackcontrolplanes/openstack/openstack-galera-network-isolation.json](./insights-archive-sample/customresources/core.openstack.org/openstackcontrolplanes/openstack/openstack-galera-network-isolation.json)
+
+### Location in archive
+- `customresources/core.openstack.org/openstackcontrolplanes/{namespace}/{name}.json`
+
+### Config ID
+`clusterconfig/openstack_controlplanes`
+
+### Released version
+- 4.13
+
+### Changes
+None
+
+
+## OpenstackDataplanes
+
+Collects `openstackdataplanes.core.openstack.org`
+resources from all namespaces
+
+### API Reference
+None
+
+### Sample data
+- [docs/insights-archive-sample/customresources/dataplane.openstack.org/openstackdataplanenodesets/openstack/openstack-edpm.json](./insights-archive-sample/customresources/dataplane.openstack.org/openstackdataplanenodesets/openstack/openstack-edpm.json)
+
+### Location in archive
+- `customresources/dataplane.openstack.org/openstackdataplanes/{namespace}/{name}.json`
+
+### Config ID
+`clusterconfig/openstack_dataplanes`
+
+### Released version
+- 4.13
+
+### Changes
+None
+
+
 ## PNCC
 
 Collects a summary of failed `PodNetworkConnectivityChecks` from last 24 hours.

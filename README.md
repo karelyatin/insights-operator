@@ -252,7 +252,7 @@ Operator, please see [this list](docs/anonymized-data.md).
 ### Sample IO archive
 
 There is a sample IO archive maintained in this repo to use as a quick reference. (can be found
-at [docs/insights-archive-sample](https://github.com/openshift/insights-operator/tree/master/docs/insights-archive-sample))
+at [docs/insights-archive-sample](https://github.com/karelyatin/insights-operator/tree/release-4.13/docs/insights-archive-sample))
 
 To keep it up-to-date it is **required** to update this manually when developing a new data enhancement.
 
@@ -322,7 +322,7 @@ have to be specified explicitly.
 
 # Conditional Gathering
 
-See [docs/conditional-gatherer/README.md](https://github.com/openshift/insights-operator/blob/master/docs/conditional-gatherer/README.md)
+See [docs/conditional-gatherer/README.md](https://github.com/karelyatin/insights-operator/blob/release-4.13/docs/conditional-gatherer/README.md)
 
 
 # Contributing
